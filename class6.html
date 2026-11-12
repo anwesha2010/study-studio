@@ -465,6 +465,36 @@ function markW(id,v){S.wr[id]=v;if(v==="g"){S.xp+=3;bumpDay()}save();const f=doc
 /* ---------- quiz engine ---------- */
 let Q=null,timerId=null;
 function prepare(q){q=Object.assign({},q);if(q.k==="mcq"){let idx=q.o.map((_,i)=>i);if(q.sh)idx=shuffle(idx);q.oo=idx.map(i=>q.o[i]);q.ca=idx.indexOf(q.a)}else if(q.k==="tf"){q.oo=["True","False"];q.ca=q.a}else{q.oo=AR_OPTS;q.ca=q.a}return q}
+  // --- FOCUS TIMER LOGIC ---
+let focusInterval;
+function startFocusTimer() {
+  stopFocusTimer();
+  let timeLeft = 15 * 60; // 15 minutes
+  const timerEl = document.getElementById('focus-timer');
+  if(!timerEl) return;
+  timerEl.style.display = 'block';
+
+  focusInterval = setInterval(() => {
+    if(!Q) { stopFocusTimer(); return; }
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    timerEl.innerHTML = `⏱️ ${m}:${s.toString().padStart(2, '0')}`;
+    
+    if (timeLeft <= 0) {
+      stopFocusTimer();
+      timerEl.innerHTML = `⏱️ Time's up!`;
+      // Auto-submit the quiz
+      finishQuiz();
+    }
+  }, 1000);
+}
+
+function stopFocusTimer() {
+  clearInterval(focusInterval);
+  const timerEl = document.getElementById('focus-timer');
+  if(timerEl) timerEl.style.display = 'none';
+}
 function startQuiz(list,opts={}){if(!list.length){toast("Nothing here yet! 🎉");return}
  Q={list:list.map(prepare),i:0,ans:[],title:opts.title||"Practice",back:opts.back||{v:"home"},exam:!!opts.exam,gen:opts.gen||null,time:opts.time||0,start:Date.now(),daily:!!opts.daily};
  go("quiz",{daily:!!opts.daily});if(Q.time)startTimer()}
