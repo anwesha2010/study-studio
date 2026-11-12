@@ -645,7 +645,17 @@ function badgeShelf(){const dt=S.dt||{};const cnt={};BADGES.forEach(b=>cnt[b.e]=
  const days=[];const d=new Date();for(let i=13;i>=0;i--){const x=new Date(d);x.setDate(d.getDate()-i);const k=x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");days.push([x,k])}
  return `<div class="shelf">${BADGES.map(b=>`<div class="b"><span>${b.e}</span><b>${cnt[b.e]}</b><div class="small">${b.n}</div></div>`).join("")}</div>
  <div class="card mt"><b>Last 14 days</b><div class="cal">${days.map(([x,k])=>`<div ${dt[k]?`onclick="go('dtresult',{d:'${k}'})" style="cursor:pointer;background:#fff;box-shadow:var(--shadow)"`:""}><span>${dt[k]?badgeFor(dt[k].p).e:(k===today()?"⏳":"·")}</span>${x.getDate()} ${x.toLocaleDateString("en-IN",{month:"short"})}</div>`).join("")}</div></div>`}
-
+// Auto-launch Mistake Notebook if coming from Home Page
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('fix') === '1') {
+  // Wait a tiny bit for the app to load, then open the mistakes
+  setTimeout(() => { 
+    if(typeof vMistakes === 'function') {
+      // Simulate clicking the Mistakes tab
+      document.querySelector('button[data-go="mistakes"]').click();
+    }
+  }, 300);
+}
 render();
 </script>
 </body>
