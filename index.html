@@ -205,6 +205,8 @@ footer b{color:var(--ink)}
 <script>
 /* ====== EDIT the href of each class to match your file names ====== */
 const CLASSES=[
+   // Ask for name if not set
+let studentName = prompt("Welcome! What's your name?", "Aman") || "Student";
   {n:5,href:"class5.html",key:"class5_revision_v1",c:"#14b8a6",soft:"#ccfbf1",tag:"🌱 baby steps era",title:"Class <em>5</em>",books:["Maths Mela","Our Wondrous World (EVS)","वीणा (Hindi)"],ch:37,qs:687},
   {n:6,href:"class6.html",key:"aarohee_revision_v1",c:"#6366f1",soft:"#e0e7ff",tag:"✨ glow-up era",title:"Class <em>6</em>",books:["Ganita Prakash","Curiosity","Exploring Society"],ch:36,qs:1529},
   {n:7,href:"class7.html",key:"class7_revision_v1",c:"#3b82f6",soft:"#dbeafe",tag:"🚀 level-up era",title:"Class <em>7</em>",books:["Ganita Prakash I & II","Curiosity","Exploring Society I & II"],ch:47,qs:771},
@@ -265,8 +267,8 @@ requestAnimationFrame(()=>document.querySelectorAll(".prog i").forEach(i=>i.styl
 // returning student: personalise hero + CTA
 if(last){
   const h=now.getHours(),g=h<12?"good morning":h<17?"hey hey":"evening grind";
-  $("#greet").innerHTML=`${g}, ${esc(last.name.toLowerCase())} — it’s`;
-  const cta=$("#cta");cta.textContent=`Continue Class ${last.n} →`;cta.href=last.href;
+  $("#greet").innerHTML=`${g}, ${esc(studentName.toLowerCase())} — it’s`;
+    const cta=$("#cta");cta.textContent=`Continue Class 6 →`;cta.href='class6.html';
   const card=document.querySelector(`[data-key="${last.key}"]`);if(card)card.insertAdjacentHTML("beforeend",`<span class="mine">your class</span>`);
 }
 
