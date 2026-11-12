@@ -22,6 +22,7 @@ body{font-family:var(--display);background:var(--bg);color:var(--ink);min-height
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 
+/* Background */
 .bg{position:fixed;inset:0;z-index:-2;overflow:hidden}
 .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;animation:float 18s ease-in-out infinite}
 .b1{width:520px;height:520px;background:#c4b5fd;top:-140px;left:-120px}
@@ -139,7 +140,7 @@ input:focus, select:focus{box-shadow:4px 4px 0 #a78bfa;background:#fff}
     <a class="logo" href="#"><span class="mark">✦</span>study studio</a>
     <div style="display:flex;gap:8px">
       <span class="chip hide-sm">📚 NCERT 2026–27</span>
-      <div class="chip" onclick="openSetup(true)">👤 <span id="who">Set Profile</span></div>
+      <div class="chip" onclick="openSetup(true)">👤 <span id="who">Profile</span></div>
     </div>
   </header>
 
@@ -211,6 +212,9 @@ input:focus, select:focus{box-shadow:4px 4px 0 #a78bfa;background:#fff}
 </div>
 
 <script>
+// 1. Wipe the ghost name completely to force the popup
+localStorage.removeItem("studio_student_name");
+
 const CLASSES=[
   {n:5,href:"class5.html",key:"class5_revision_v1",c:"#14b8a6",soft:"#ccfbf1",tag:"🌱 baby steps era",title:"Class <em>5</em>",books:["Maths Mela","Our Wondrous World (EVS)","वीणा (Hindi)"],ch:37,qs:687},
   {n:6,href:"class6.html",key:"class6_revision_v1",c:"#6366f1",soft:"#e0e7ff",tag:"✨ glow-up era",title:"Class <em>6</em>",books:["Ganita Prakash","Curiosity","Exploring Society"],ch:36,qs:1529},
@@ -237,11 +241,15 @@ const dk=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+Strin
 function streakOf(days){if(!days)return 0;let s=0;const d=new Date();if(!days[dk(d)])d.setDate(d.getDate()-1);while(days[dk(d)]){s++;d.setDate(d.getDate()-1)}return s}
 function mastery(S){if(!S||!S.q)return 0;let l=0;for(const k in S.q)if(S.q[k]&&S.q[k].l)l++;return l}
 
-// 1. IMPORTANT: Clear the old name so it forces the prompt
-localStorage.removeItem("studio_student_name"); 
-
 let studentName = localStorage.getItem("studio_student_name");
 let studentClass = localStorage.getItem("studio_student_class");
+
+// Force the modal if no name exists
+if(!studentName) {
+  setTimeout(()=> {
+    openSetup(false);
+  }, 100);
+}
 
 function openSetup(force) {
   if(force) {
@@ -271,8 +279,7 @@ document.getElementById("setupForm").addEventListener("submit", function(e) {
 
 // Render Grid
 $("#grid").innerHTML=CLASSES.map((c,i)=>{
-  // We check the class's specific key to see if THEY have progress
-  const S=read(c.key); 
+  const S=read(c.key);
   const st=S?streakOf(S.days):0;
   const m=mastery(S);
   const p=Math.min(100,Math.round(m*100/c.qs));
@@ -312,12 +319,16 @@ function updateUI() {
       cta.textContent=`Continue Class ${studentClass} →`;
       cta.href="class"+studentClass+".html";
     }
+  } else {
+    // If no name, force the greeting to be generic
+    $("#greet").innerHTML=`revise like it’s`;
+    $("#who").innerHTML=`Profile`;
   }
 
-  // Calculate Stats across ALL classes
+  // Calculate Stats
   let xp=0,best=0,qsTot=0,chTot=0;
   CLASSES.forEach(c => {
-    const S=read(c.key); // Look inside class keys to find data
+    const S=read(c.key);
     if(S) {
       xp+=(S.xp||0);
       best=Math.max(best,streakOf(S.days));
@@ -329,13 +340,9 @@ function updateUI() {
   $("#stStreak").textContent=best;
   $("#stQs").textContent=qsTot.toLocaleString("en-IN");
   $("#stCh").textContent=chTot;
-
-  // If no name is set, pop the modal after a short delay
-  if(!studentName) {
-    setTimeout(()=>openSetup(false), 500);
-  }
 }
 
+// Initialize page
 updateUI();
 </script>
 </body>
