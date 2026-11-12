@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f6f1ff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Study Studio">
-<title>Study Studio ✦ pick your class</title>
+<title>Study Studio ✦ Sign In</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -76,7 +76,7 @@ h1 .hl::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.06em;heigh
 .sec p{color:var(--muted);font-weight:600}
 
 .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
-.card{--c:#7c3aed;--soft:#ede9fe;position:relative;grid-column:span 2;min-height:300px;border-radius:30px;padding:22px;background:#fff;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;isolation:isolate}
+.card{--c:#7c3aed;--soft:#ede9fe;position:relative;grid-column:span 2;min-height:300px;border-radius:30px;padding:22px;background:#fff;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;isolation:isolate;text-align:left}
 .card:hover{transform:translate(-3px,-5px) rotate(-.6deg);box-shadow:10px 11px 0 var(--ink)}
 .card:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
 .card.wide{grid-column:span 3}
@@ -94,6 +94,13 @@ h1 .hl::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.06em;heigh
 .go{width:52px;height:52px;flex:none;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:22px;transition:transform .25s}
 .card:hover .go{transform:rotate(-45deg);background:var(--c)}
 
+/* Locked overlay styling for other classes */
+.card.locked{opacity:0.6;filter:grayscale(80%);cursor:not-allowed}
+.card.locked:hover{transform:none;box-shadow:6px 6px 0 var(--ink)}
+.card.locked:hover .go{transform:none;background:var(--ink)}
+.card.locked:hover::before{transform:none}
+.card.locked::after{content:"🔒 Locked";position:absolute;top:20px;right:20px;background:#fff;border:2px solid var(--ink);padding:4px 10px;border-radius:99px;font-size:12px;font-weight:800;transform:rotate(-5deg);box-shadow:2px 2px 0 var(--ink)}
+
 .duo{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-top:16px}
 .panel{border-radius:30px;padding:26px;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink)}
 .vibe{background:linear-gradient(135deg,#16121f,#3b1d6e);color:#fff}
@@ -109,9 +116,9 @@ h1 .hl::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.06em;heigh
 footer{text-align:center;margin-top:56px;color:var(--muted);font-weight:600;font-size:14px}
 footer b{color:var(--ink)}
 
-/* Modal Setup */
-.setup{display:none;position:fixed;inset:0;background:#16121fdd;backdrop-filter:blur(6px);z-index:100;place-items:center;padding:20px}
-.setup.show{display:grid}
+/* FULL SCREEN SIGN IN MODAL */
+.setup{display:grid;position:fixed;inset:0;background:var(--bg);z-index:100;place-items:center;padding:20px}
+.setup.hidden{display:none}
 .setup-card{background:#fff;border:2px solid var(--ink);border-radius:30px;padding:36px 28px;box-shadow:8px 8px 0 var(--ink);text-align:center;width:100%;max-width:440px;animation:pop .4s}
 @keyframes pop{from{opacity:0;transform:scale(.95) translateY(20px)}to{opacity:1;transform:none}}
 .setup-card h2{font-size:32px;letter-spacing:-.04em;margin-bottom:8px;font-weight:800}
@@ -139,8 +146,7 @@ input:focus, select:focus{box-shadow:4px 4px 0 #a78bfa;background:#fff}
   <header class="top">
     <a class="logo" href="#"><span class="mark">✦</span>study studio</a>
     <div style="display:flex;gap:8px">
-      <span class="chip hide-sm">📚 NCERT 2026–27</span>
-      <div class="chip" onclick="openSetup(true)">👤 <span id="who">Profile</span></div>
+      <div class="chip hidden" id="profileChip" onclick="signOut()" style="display:none">👤 <span id="who"></span> (Sign out)</div>
     </div>
   </header>
 
@@ -190,11 +196,11 @@ input:focus, select:focus{box-shadow:4px 4px 0 #a78bfa;background:#fff}
   <footer>made with ♡ for exam season · <b>study studio</b> · works offline once opened</footer>
 </div>
 
-<!-- Profile Setup Modal -->
+<!-- SIGN IN SCREEN -->
 <div class="setup" id="setupModal">
   <div class="setup-card">
-    <h2>let's get you <em>started.</em></h2>
-    <p>Tell us who you are so we can save your progress.</p>
+    <h2>welcome to <em>study studio.</em></h2>
+    <p>Sign in to access your class and save your progress.</p>
     <form id="setupForm">
       <label>What's your name?</label>
       <input type="text" id="userName" placeholder="e.g. Aman" required autocomplete="off">
@@ -206,15 +212,12 @@ input:focus, select:focus{box-shadow:4px 4px 0 #a78bfa;background:#fff}
         <option value="8">Class 8</option>
         <option value="9">Class 9</option>
       </select>
-      <button type="submit" class="setup-btn">Enter Studio →</button>
+      <button type="submit" class="setup-btn">Sign In →</button>
     </form>
   </div>
 </div>
 
 <script>
-// 1. Wipe the ghost name completely to force the popup
-localStorage.removeItem("studio_student_name");
-
 const CLASSES=[
   {n:5,href:"class5.html",key:"class5_revision_v1",c:"#14b8a6",soft:"#ccfbf1",tag:"🌱 baby steps era",title:"Class <em>5</em>",books:["Maths Mela","Our Wondrous World (EVS)","वीणा (Hindi)"],ch:37,qs:687},
   {n:6,href:"class6.html",key:"class6_revision_v1",c:"#6366f1",soft:"#e0e7ff",tag:"✨ glow-up era",title:"Class <em>6</em>",books:["Ganita Prakash","Curiosity","Exploring Society"],ch:36,qs:1529},
@@ -241,26 +244,21 @@ const dk=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+Strin
 function streakOf(days){if(!days)return 0;let s=0;const d=new Date();if(!days[dk(d)])d.setDate(d.getDate()-1);while(days[dk(d)]){s++;d.setDate(d.getDate()-1)}return s}
 function mastery(S){if(!S||!S.q)return 0;let l=0;for(const k in S.q)if(S.q[k]&&S.q[k].l)l++;return l}
 
+// 1. Check Auth
 let studentName = localStorage.getItem("studio_student_name");
 let studentClass = localStorage.getItem("studio_student_class");
 
-// Force the modal if no name exists
+// If not logged in, show the full screen sign-in
 if(!studentName) {
-  setTimeout(()=> {
-    openSetup(false);
-  }, 100);
+  $("#setupModal").classList.remove("hidden");
+  $("#profileChip").style.display = "none";
+} else {
+  $("#setupModal").classList.add("hidden");
+  $("#profileChip").style.display = "inline-flex";
+  $("#who").textContent = studentName;
 }
 
-function openSetup(force) {
-  if(force) {
-    studentName = null;
-    localStorage.removeItem("studio_student_name");
-  }
-  $("#userName").value = studentName || "";
-  if(studentClass) $("#userClass").value = studentClass;
-  $("#setupModal").classList.add("show");
-}
-
+// Handle Sign In
 document.getElementById("setupForm").addEventListener("submit", function(e) {
   e.preventDefault();
   const name = $("#userName").value.trim();
@@ -270,12 +268,44 @@ document.getElementById("setupForm").addEventListener("submit", function(e) {
     localStorage.setItem("studio_student_class", cls);
     studentName = name;
     studentClass = cls;
+    
+    // Update UI to show they are logged in
+    $("#setupModal").classList.add("hidden");
+    $("#profileChip").style.display = "inline-flex";
+    $("#who").textContent = name;
+    
     updateUI();
-    $("#setupModal").classList.remove("show");
-    // Redirect to their class app
-    window.location.href = "class" + cls + ".html";
+    window.scrollTo(0,0);
   }
 });
+
+// Handle Sign Out
+function signOut() {
+  if(confirm("Are you sure you want to sign out?")) {
+    localStorage.removeItem("studio_student_name");
+    localStorage.removeItem("studio_student_class");
+    location.reload();
+  }
+}
+
+// Handle clicking a card
+function goToClass(clsNum, event) {
+  // If not logged in, stop them
+  if(!studentName) {
+    event.preventDefault();
+    alert("Please sign in first!");
+    return;
+  }
+  
+  // If logged in, but clicking a different class
+  if(parseInt(clsNum) !== parseInt(studentClass)) {
+    event.preventDefault();
+    alert("🔒 You are signed in to Class " + studentClass + ". Please sign out to switch classes.");
+    return;
+  }
+  
+  // If it's their class, let the link work
+}
 
 // Render Grid
 $("#grid").innerHTML=CLASSES.map((c,i)=>{
@@ -284,20 +314,21 @@ $("#grid").innerHTML=CLASSES.map((c,i)=>{
   const m=mastery(S);
   const p=Math.min(100,Math.round(m*100/c.qs));
   
+  // Add locked class if they are signed in but this isn't their class
+  let lockClass = "";
+  if(studentName && parseInt(studentClass) !== c.n) {
+    lockClass = " locked";
+  }
+  
   const info=S&&S.name?`<b style="color:var(--ink)">${esc(S.name)}</b> · 🔥 ${st} day${st===1?"":"s"} · ⭐ ${S.xp||0} XP`:`${c.ch} chapters · ${c.qs.toLocaleString("en-IN")} questions`;
   
-  return `<a class="card${c.wide?" wide":""}" href="${c.href}" style="--c:${c.c};--soft:${c.soft}" onclick="saveClassChoice(${c.n})">
+  return `<a class="card${c.wide?" wide":""}${lockClass}" href="${c.href}" style="--c:${c.c};--soft:${c.soft}" onclick="goToClass(${c.n}, event)">
     <div class="row"><div class="num">${c.n}</div><span class="tag">${c.tag}</span></div>
     <h3>${c.title}</h3>
     <div class="books">${c.books.map(b=>`<span class="book">${b}</span>`).join("")}</div>
-    ${S?`<div class="prog" title="${p}% mastered"><i data-w="${p}"></i></div>`:""}
     <div class="meta"><small>${info}</small><span class="go">→</span></div>
   </a>`
 }).join("");
-
-function saveClassChoice(cls) {
-  localStorage.setItem("studio_student_class", cls);
-}
 
 // Vibe / Marquee
 const row=VIBES.map(v=>`<span>${v} <i>✦</i></span>`).join("");
@@ -312,7 +343,6 @@ function updateUI() {
   if(studentName) {
     const h=now.getHours(),g=h<12?"good morning":h<17?"hey hey":"evening grind";
     $("#greet").innerHTML=`${g}, ${esc(studentName.toLowerCase())} — it’s`;
-    $("#who").innerHTML=esc(studentName);
     
     if(studentClass) {
       const cta=$("#cta");
@@ -320,9 +350,7 @@ function updateUI() {
       cta.href="class"+studentClass+".html";
     }
   } else {
-    // If no name, force the greeting to be generic
     $("#greet").innerHTML=`revise like it’s`;
-    $("#who").innerHTML=`Profile`;
   }
 
   // Calculate Stats
@@ -342,7 +370,7 @@ function updateUI() {
   $("#stCh").textContent=chTot;
 }
 
-// Initialize page
+// Initialize
 updateUI();
 </script>
 </body>
