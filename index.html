@@ -11,15 +11,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#f6f1ff; --ink:#16121f; --muted:#6b6478; --card:#ffffffcc; --line:#16121f14;
-  --display:"Bricolage Grotesque",ui-rounded,"SF Pro Rounded",system-ui,sans-serif;
-  --serif:"Instrument Serif",Georgia,serif;
-}
+:root{--bg:#f6f1ff;--ink:#16121f;--muted:#6b6478;--card:#ffffffcc;--line:#16121f14;--display:"Bricolage Grotesque",sans-serif;--serif:"Instrument Serif",serif;}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:var(--display);background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden;
-  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);-webkit-font-smoothing:antialiased}
+body{font-family:var(--display);background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 
 /* Background */
@@ -142,7 +137,7 @@ input:focus, select:focus{box-shadow:4px 4px 0 #a78bfa;background:#fff}
     <a class="logo" href="#"><span class="mark">✦</span>study studio</a>
     <div style="display:flex;gap:8px">
       <span class="chip hide-sm">📚 NCERT 2026–27</span>
-      <div class="chip" onclick="openSetup()">👤 <span id="who">Profile</span></div>
+      <div class="chip" onclick="openSetup(true)">👤 <span id="who">Profile</span></div>
     </div>
   </header>
 
@@ -241,10 +236,16 @@ function streakOf(days){if(!days)return 0;let s=0;const d=new Date();if(!days[dk
 function mastery(S){if(!S||!S.q)return 0;let l=0;for(const k in S.q)if(S.q[k]&&S.q[k].l)l++;return l}
 
 // Setup Profile Modal Logic
+// We use a specific key "studio_student_name" so it doesn't get confused with the classes
 let studentName = localStorage.getItem("studio_student_name");
 let studentClass = localStorage.getItem("studio_student_class");
 
-function openSetup() {
+function openSetup(force) {
+  // If they are forcing it from the top button, clear the old name to make a fresh profile
+  if(force) {
+    studentName = null;
+    localStorage.removeItem("studio_student_name");
+  }
   $("#userName").value = studentName || "";
   if(studentClass) $("#userClass").value = studentClass;
   $("#setupModal").classList.add("show");
@@ -303,7 +304,6 @@ function updateUI() {
     $("#greet").innerHTML=`${g}, ${esc(studentName.toLowerCase())} — it’s`;
     $("#who").innerHTML=esc(studentName);
     
-    // Update CTA
     if(studentClass) {
       const cta=$("#cta");
       cta.textContent=`Continue Class ${studentClass} →`;
@@ -312,13 +312,12 @@ function updateUI() {
   }
 
   // Calculate Stats
-  let xp=0,best=0,qsTot=0,chTot=0,last=null;
+  let xp=0,best=0,qsTot=0,chTot=0;
   CLASSES.forEach(c => {
     const S=read(c.key);
     if(S) {
       xp+=(S.xp||0);
       best=Math.max(best,streakOf(S.days));
-      if(S.name&&(!last||((S.xp||0)>(last.xp||0)))) last={...c,name:S.name,xp:S.xp||0};
     }
     qsTot+=c.qs;
     chTot+=c.ch;
@@ -328,8 +327,9 @@ function updateUI() {
   $("#stQs").textContent=qsTot.toLocaleString("en-IN");
   $("#stCh").textContent=chTot;
 
+  // If no name is set, pop the modal after a short delay
   if(!studentName) {
-    setTimeout(openSetup, 500);
+    setTimeout(()=>openSetup(false), 500);
   }
 }
 
