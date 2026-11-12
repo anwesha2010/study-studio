@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f6f1ff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Study Studio">
-<title>Study Studio ✦ Sign In</title>
+<title>Study Studio ✦ pick your class</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -94,12 +94,12 @@ h1 .hl::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.06em;heigh
 .go{width:52px;height:52px;flex:none;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:22px;transition:transform .25s}
 .card:hover .go{transform:rotate(-45deg);background:var(--c)}
 
-/* Locked overlay styling for other classes */
+/* Locked Class overlay */
 .card.locked{opacity:0.6;filter:grayscale(80%);cursor:not-allowed}
 .card.locked:hover{transform:none;box-shadow:6px 6px 0 var(--ink)}
 .card.locked:hover .go{transform:none;background:var(--ink)}
 .card.locked:hover::before{transform:none}
-.card.locked::after{content:"🔒 Locked";position:absolute;top:20px;right:20px;background:#fff;border:2px solid var(--ink);padding:4px 10px;border-radius:99px;font-size:12px;font-weight:800;transform:rotate(-5deg);box-shadow:2px 2px 0 var(--ink)}
+.card.locked::after{content:"🔒 Login to unlock";position:absolute;top:20px;right:20px;background:#fff;border:2px solid var(--ink);padding:4px 10px;border-radius:99px;font-size:12px;font-weight:800;transform:rotate(-5deg);box-shadow:2px 2px 0 var(--ink)}
 
 .duo{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-top:16px}
 .panel{border-radius:30px;padding:26px;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink)}
@@ -116,9 +116,9 @@ h1 .hl::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.06em;heigh
 footer{text-align:center;margin-top:56px;color:var(--muted);font-weight:600;font-size:14px}
 footer b{color:var(--ink)}
 
-/* FULL SCREEN SIGN IN MODAL */
-.setup{display:grid;position:fixed;inset:0;background:var(--bg);z-index:100;place-items:center;padding:20px}
-.setup.hidden{display:none}
+/* SIGN IN POPUP MODAL */
+.setup{display:none;position:fixed;inset:0;background:#16121fdd;backdrop-filter:blur(6px);z-index:100;place-items:center;padding:20px}
+.setup.show{display:grid}
 .setup-card{background:#fff;border:2px solid var(--ink);border-radius:30px;padding:36px 28px;box-shadow:8px 8px 0 var(--ink);text-align:center;width:100%;max-width:440px;animation:pop .4s}
 @keyframes pop{from{opacity:0;transform:scale(.95) translateY(20px)}to{opacity:1;transform:none}}
 .setup-card h2{font-size:32px;letter-spacing:-.04em;margin-bottom:8px;font-weight:800}
@@ -129,6 +129,8 @@ input, select{width:100%;padding:16px;border-radius:16px;border:2px solid var(--
 input:focus, select:focus{box-shadow:4px 4px 0 #a78bfa;background:#fff}
 .setup-btn{width:100%;padding:16px;border-radius:16px;border:2px solid var(--ink);background:var(--ink);color:#fff;font-family:inherit;font-size:18px;font-weight:800;cursor:pointer;box-shadow:4px 4px 0 #a78bfa}
 .setup-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 #a78bfa}
+.close-btn{position:absolute;top:20px;right:20px;background:#fff;border:2px solid var(--ink);border-radius:50%;width:40px;height:40px;cursor:pointer;font-weight:800;display:grid;place-items:center}
+.close-btn:hover{background:#fde047}
 
 @media (max-width:980px){.card,.card.wide{grid-column:span 3}.stats{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:640px){
@@ -146,7 +148,8 @@ input:focus, select:focus{box-shadow:4px 4px 0 #a78bfa;background:#fff}
   <header class="top">
     <a class="logo" href="#"><span class="mark">✦</span>study studio</a>
     <div style="display:flex;gap:8px">
-      <div class="chip hidden" id="profileChip" onclick="signOut()" style="display:none">👤 <span id="who"></span> (Sign out)</div>
+      <span class="chip hide-sm">📚 NCERT 2026–27</span>
+      <div class="chip" id="authBtn" onclick="openSignIn()">👤 Sign In</div>
     </div>
   </header>
 
@@ -156,7 +159,7 @@ input:focus, select:focus{box-shadow:4px 4px 0 #a78bfa;background:#fff}
     <h1><span id="greet">revise like it’s</span><br>your <em>main character</em> <span class="hl">era.</span></h1>
     <p class="sub">Pick your class. Smash a 30-question daily test, keep the streak alive 🔥, and turn every mistake into marks. Goal: <b style="color:var(--ink)">95%+</b>, no cap.</p>
     <div class="cta-row">
-      <a class="btn primary" id="cta" href="#classes">Pick my class ↓</a>
+      <a class="btn primary" id="cta" href="#classes">Explore Classes ↓</a>
       <a class="btn ghost" href="#how">How it works</a>
     </div>
 
@@ -196,11 +199,12 @@ input:focus, select:focus{box-shadow:4px 4px 0 #a78bfa;background:#fff}
   <footer>made with ♡ for exam season · <b>study studio</b> · works offline once opened</footer>
 </div>
 
-<!-- SIGN IN SCREEN -->
+<!-- SIGN IN POPUP MODAL -->
 <div class="setup" id="setupModal">
-  <div class="setup-card">
-    <h2>welcome to <em>study studio.</em></h2>
-    <p>Sign in to access your class and save your progress.</p>
+  <div class="setup-card" style="position:relative">
+    <button class="close-btn" onclick="closeSignIn()">✕</button>
+    <h2 id="signInTitle">sign in to <em>study studio.</em></h2>
+    <p id="signInSub">Enter your details to access your class.</p>
     <form id="setupForm">
       <label>What's your name?</label>
       <input type="text" id="userName" placeholder="e.g. Aman" required autocomplete="off">
@@ -244,21 +248,31 @@ const dk=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+Strin
 function streakOf(days){if(!days)return 0;let s=0;const d=new Date();if(!days[dk(d)])d.setDate(d.getDate()-1);while(days[dk(d)]){s++;d.setDate(d.getDate()-1)}return s}
 function mastery(S){if(!S||!S.q)return 0;let l=0;for(const k in S.q)if(S.q[k]&&S.q[k].l)l++;return l}
 
-// 1. Check Auth
+// AUTH LOGIC
 let studentName = localStorage.getItem("studio_student_name");
 let studentClass = localStorage.getItem("studio_student_class");
 
-// If not logged in, show the full screen sign-in
-if(!studentName) {
-  $("#setupModal").classList.remove("hidden");
-  $("#profileChip").style.display = "none";
-} else {
-  $("#setupModal").classList.add("hidden");
-  $("#profileChip").style.display = "inline-flex";
-  $("#who").textContent = studentName;
+function openSignIn() {
+  // If already logged in, this acts as a "Sign Out" button
+  if (studentName) {
+    if(confirm("Sign out of " + studentName + "'s profile?")) {
+      localStorage.removeItem("studio_student_name");
+      localStorage.removeItem("studio_student_class");
+      location.reload();
+    }
+    return;
+  }
+  
+  // Otherwise, open the modal
+  $("#userName").value = "";
+  $("#userClass").value = "5";
+  $("#setupModal").classList.add("show");
 }
 
-// Handle Sign In
+function closeSignIn() {
+  $("#setupModal").classList.remove("show");
+}
+
 document.getElementById("setupForm").addEventListener("submit", function(e) {
   e.preventDefault();
   const name = $("#userName").value.trim();
@@ -266,34 +280,19 @@ document.getElementById("setupForm").addEventListener("submit", function(e) {
   if(name) {
     localStorage.setItem("studio_student_name", name);
     localStorage.setItem("studio_student_class", cls);
-    studentName = name;
-    studentClass = cls;
-    
-    // Update UI to show they are logged in
-    $("#setupModal").classList.add("hidden");
-    $("#profileChip").style.display = "inline-flex";
-    $("#who").textContent = name;
-    
-    updateUI();
-    window.scrollTo(0,0);
+    location.reload(); // Reload to apply the lock state
   }
 });
 
-// Handle Sign Out
-function signOut() {
-  if(confirm("Are you sure you want to sign out?")) {
-    localStorage.removeItem("studio_student_name");
-    localStorage.removeItem("studio_student_class");
-    location.reload();
-  }
-}
-
 // Handle clicking a card
 function goToClass(clsNum, event) {
-  // If not logged in, stop them
+  // If not logged in, stop them and prompt to sign in
   if(!studentName) {
     event.preventDefault();
-    alert("Please sign in first!");
+    $("#signInTitle").innerHTML = "sign in to <em>continue.</em>";
+    $("#signInSub").innerHTML = "You must sign in to access Class " + clsNum + ".";
+    $("#userClass").value = clsNum;
+    $("#setupModal").classList.add("show");
     return;
   }
   
@@ -303,57 +302,60 @@ function goToClass(clsNum, event) {
     alert("🔒 You are signed in to Class " + studentClass + ". Please sign out to switch classes.");
     return;
   }
-  
-  // If it's their class, let the link work
 }
 
-// Render Grid
-$("#grid").innerHTML=CLASSES.map((c,i)=>{
-  const S=read(c.key);
-  const st=S?streakOf(S.days):0;
-  const m=mastery(S);
-  const p=Math.min(100,Math.round(m*100/c.qs));
-  
-  // Add locked class if they are signed in but this isn't their class
-  let lockClass = "";
-  if(studentName && parseInt(studentClass) !== c.n) {
-    lockClass = " locked";
-  }
-  
-  const info=S&&S.name?`<b style="color:var(--ink)">${esc(S.name)}</b> · 🔥 ${st} day${st===1?"":"s"} · ⭐ ${S.xp||0} XP`:`${c.ch} chapters · ${c.qs.toLocaleString("en-IN")} questions`;
-  
-  return `<a class="card${c.wide?" wide":""}${lockClass}" href="${c.href}" style="--c:${c.c};--soft:${c.soft}" onclick="goToClass(${c.n}, event)">
-    <div class="row"><div class="num">${c.n}</div><span class="tag">${c.tag}</span></div>
-    <h3>${c.title}</h3>
-    <div class="books">${c.books.map(b=>`<span class="book">${b}</span>`).join("")}</div>
-    <div class="meta"><small>${info}</small><span class="go">→</span></div>
-  </a>`
-}).join("");
+// Render UI
+function renderGrid() {
+  $("#grid").innerHTML=CLASSES.map((c,i)=>{
+    const S=read(c.key);
+    const st=S?streakOf(S.days):0;
+    const m=mastery(S);
+    const p=Math.min(100,Math.round(m*100/c.qs));
+    
+    // Lock classes if not logged in, or if clicking a different class than assigned
+    let lockClass = "";
+    if(!studentName) {
+      lockClass = " locked";
+    } else if (parseInt(studentClass) !== c.n) {
+      lockClass = " locked";
+    }
+    
+    const info=S&&S.name?`<b style="color:var(--ink)">${esc(S.name)}</b> · 🔥 ${st} day${st===1?"":"s"} · ⭐ ${S.xp||0} XP`:`${c.ch} chapters · ${c.qs.toLocaleString("en-IN")} questions`;
+    
+    return `<a class="card${c.wide?" wide":""}${lockClass}" href="${c.href}" style="--c:${c.c};--soft:${c.soft}" onclick="goToClass(${c.n}, event)">
+      <div class="row"><div class="num">${c.n}</div><span class="tag">${c.tag}</span></div>
+      <h3>${c.title}</h3>
+      <div class="books">${c.books.map(b=>`<span class="book">${b}</span>`).join("")}</div>
+      <div class="meta"><small>${info}</small><span class="go">→</span></div>
+    </a>`
+  }).join("");
+}
 
-// Vibe / Marquee
-const row=VIBES.map(v=>`<span>${v} <i>✦</i></span>`).join("");
-$("#track").innerHTML=row+row;
-
-const now=new Date();
-const day=Math.floor(now/864e5);const q=QUOTES[day%QUOTES.length];
-$("#quote").textContent=q[0];$("#task").textContent="Today’s tiny task: "+q[1];
-
-// Update UI Stats & Greeting
 function updateUI() {
+  // Auth button
   if(studentName) {
-    const h=now.getHours(),g=h<12?"good morning":h<17?"hey hey":"evening grind";
+    $("#authBtn").innerHTML = `👤 ${esc(studentName)} (Sign out)`;
+    $("#authBtn").style.background = "#fde047";
+    $("#authBtn").style.borderColor = "var(--ink)";
+  }
+
+  // Greeting
+  if(studentName) {
+    const h=new Date().getHours(),g=h<12?"good morning":h<17?"hey hey":"evening grind";
     $("#greet").innerHTML=`${g}, ${esc(studentName.toLowerCase())} — it’s`;
     
     if(studentClass) {
       const cta=$("#cta");
-      cta.textContent=`Continue Class ${studentClass} →`;
+      cta.textContent=`Go to Class ${studentClass} →`;
       cta.href="class"+studentClass+".html";
     }
   } else {
     $("#greet").innerHTML=`revise like it’s`;
+    $("#cta").textContent=`Explore Classes ↓`;
+    $("#cta").href="#classes";
   }
 
-  // Calculate Stats
+  // Stats
   let xp=0,best=0,qsTot=0,chTot=0;
   CLASSES.forEach(c => {
     const S=read(c.key);
@@ -368,9 +370,18 @@ function updateUI() {
   $("#stStreak").textContent=best;
   $("#stQs").textContent=qsTot.toLocaleString("en-IN");
   $("#stCh").textContent=chTot;
+
+  renderGrid();
 }
 
 // Initialize
+const row=VIBES.map(v=>`<span>${v} <i>✦</i></span>`).join("");
+$("#track").innerHTML=row+row;
+
+const now=new Date();
+const day=Math.floor(now/864e5);const q=QUOTES[day%QUOTES.length];
+$("#quote").textContent=q[0];$("#task").textContent="Today’s tiny task: "+q[1];
+
 updateUI();
 </script>
 </body>
