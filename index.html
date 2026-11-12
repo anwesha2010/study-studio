@@ -11,10 +11,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   EDIT HERE: set each card's link to your class app's file name
-   (scroll down to the CLASSES list inside <script>)
-   ============================================================ */
 :root{
   --bg:#f6f1ff; --ink:#16121f; --muted:#6b6478; --card:#ffffffcc; --line:#16121f14;
   --display:"Bricolage Grotesque",ui-rounded,"SF Pro Rounded",system-ui,sans-serif;
@@ -26,7 +22,6 @@ body{font-family:var(--display);background:var(--bg);color:var(--ink);min-height
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 
-/* ---------- background: mesh blobs + grain ---------- */
 .bg{position:fixed;inset:0;z-index:-2;overflow:hidden}
 .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;animation:float 18s ease-in-out infinite}
 .b1{width:520px;height:520px;background:#c4b5fd;top:-140px;left:-120px}
@@ -39,7 +34,6 @@ a{color:inherit;text-decoration:none}
 
 .wrap{max-width:1180px;margin:0 auto;padding:22px 22px 60px}
 
-/* ---------- top bar ---------- */
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.02em}
 .logo .mark{width:38px;height:38px;border-radius:12px;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:20px;transform:rotate(-8deg);box-shadow:3px 3px 0 #a78bfa}
@@ -47,7 +41,6 @@ a{color:inherit;text-decoration:none}
 .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px #22c55e33;animation:pulse 2s infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 8px #22c55e00}}
 
-/* ---------- hero ---------- */
 .hero{position:relative;padding:64px 0 34px;text-align:center}
 .eyebrow{display:inline-block;font-weight:600;font-size:14px;padding:6px 14px;border-radius:999px;background:#16121f;color:#fff;transform:rotate(-2deg)}
 h1{font-size:clamp(44px,8.4vw,108px);line-height:.92;letter-spacing:-.045em;font-weight:800;margin-top:22px}
@@ -64,32 +57,27 @@ h1 .hl::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.06em;heigh
 .btn.primary:hover{box-shadow:6px 6px 0 #a78bfa}.btn.ghost:hover{box-shadow:6px 6px 0 var(--ink)}
 .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
 
-/* floating stickers */
 .sticker{position:absolute;font-size:44px;filter:drop-shadow(3px 4px 0 #16121f22);animation:bob 6s ease-in-out infinite;user-select:none;pointer-events:none}
 .s1{top:40px;left:4%;transform:rotate(-14deg)}.s2{top:70px;right:6%;animation-delay:-2s}
 .s3{top:420px;left:3%;animation-delay:-4s}.s4{top:320px;right:3%;animation-delay:-1s}
 @keyframes bob{0%,100%{translate:0 0;rotate:-8deg}50%{translate:0 -14px;rotate:8deg}}
 
-/* ---------- stats ---------- */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:30px}
 .stat{background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1.5px solid var(--line);border-radius:22px;padding:16px 18px}
 .stat b{display:block;font-size:30px;letter-spacing:-.03em}
 .stat span{color:var(--muted);font-size:13px;font-weight:600}
 
-/* ---------- marquee ---------- */
 .marquee{margin:34px 0 0;margin-left:calc(50% - 50vw);width:100vw;background:var(--ink);color:#fff;transform:rotate(-1.5deg);overflow:hidden;border-block:2px solid var(--ink)}
 .track{display:flex;gap:36px;padding:14px 0;width:max-content;animation:scroll 32s linear infinite;font-weight:700;font-size:18px;letter-spacing:-.01em}
 .track span{display:inline-flex;gap:36px;align-items:center;white-space:nowrap}
 .track i{font-style:normal;color:#fde047}
 @keyframes scroll{to{transform:translateX(-50%)}}
 
-/* ---------- section head ---------- */
 .sec{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:64px 0 20px;flex-wrap:wrap}
 .sec h2{font-size:clamp(30px,4.6vw,48px);letter-spacing:-.04em;line-height:1}
 .sec h2 em{font-family:var(--serif);font-weight:400}
 .sec p{color:var(--muted);font-weight:600}
 
-/* ---------- bento class grid ---------- */
 .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
 .card{--c:#7c3aed;--soft:#ede9fe;position:relative;grid-column:span 2;min-height:300px;border-radius:30px;padding:22px;background:#fff;border:2px solid var(--ink);
   box-shadow:6px 6px 0 var(--ink);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s;isolation:isolate}
@@ -113,7 +101,6 @@ h1 .hl::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.06em;heigh
 .prog i{display:block;height:100%;background:var(--c);border-radius:99px;width:0;transition:width 1s .3s}
 .mine{position:absolute;top:96px;right:20px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:#fde047;border:1.5px solid var(--ink);padding:4px 10px;border-radius:99px;transform:rotate(-3deg)}
 
-/* ---------- vibe + how ---------- */
 .duo{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-top:16px}
 .panel{border-radius:30px;padding:26px;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink)}
 .vibe{background:linear-gradient(135deg,#16121f,#3b1d6e);color:#fff}
@@ -128,12 +115,8 @@ h1 .hl::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.06em;heigh
 
 footer{text-align:center;margin-top:56px;color:var(--muted);font-weight:600;font-size:14px}
 footer b{color:var(--ink)}
-
-/* entrance */
 .rise{opacity:0;transform:translateY(24px);animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes rise{to{opacity:1;transform:none}}
-
-/* ---------- responsive ---------- */
 @media (max-width:980px){.card,.card.wide{grid-column:span 3}.stats{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:640px){
   .grid{grid-template-columns:1fr}.card,.card.wide{grid-column:auto;min-height:250px}
@@ -170,7 +153,7 @@ footer b{color:var(--ink)}
       <div class="stat"><b id="stXp">0</b><span>⭐ total XP</span></div>
       <div class="stat"><b id="stStreak">0</b><span>🔥 best streak (days)</span></div>
       <div class="stat"><b id="stQs">4,139</b><span>🧠 practice questions</span></div>
-      <div class="stat"><b id="stCh">172</b><span>📖 chapters covered</span></div>
+      <div class="stat"><b id="stCh">192</b><span>📖 chapters covered</span></div>
     </div>
   </section>
 
@@ -203,12 +186,9 @@ footer b{color:var(--ink)}
 </div>
 
 <script>
-/* ====== EDIT the href of each class to match your file names ====== */
 const CLASSES=[
-   // Ask for name if not set
-let studentName = prompt("Welcome! What's your name?", "Aman") || "Student";
   {n:5,href:"class5.html",key:"class5_revision_v1",c:"#14b8a6",soft:"#ccfbf1",tag:"🌱 baby steps era",title:"Class <em>5</em>",books:["Maths Mela","Our Wondrous World (EVS)","वीणा (Hindi)"],ch:37,qs:687},
-  {n:6,href:"class6.html",key:"aarohee_revision_v1",c:"#6366f1",soft:"#e0e7ff",tag:"✨ glow-up era",title:"Class <em>6</em>",books:["Ganita Prakash","Curiosity","Exploring Society"],ch:36,qs:1529},
+  {n:6,href:"class6.html",key:"class6_revision_v1",c:"#6366f1",soft:"#e0e7ff",tag:"✨ glow-up era",title:"Class <em>6</em>",books:["Ganita Prakash","Curiosity","Exploring Society"],ch:36,qs:1529},
   {n:7,href:"class7.html",key:"class7_revision_v1",c:"#3b82f6",soft:"#dbeafe",tag:"🚀 level-up era",title:"Class <em>7</em>",books:["Ganita Prakash I & II","Curiosity","Exploring Society I & II"],ch:47,qs:771},
   {n:8,href:"class8.html",key:"class8_revision_v1",c:"#f97316",soft:"#ffedd5",tag:"🎯 locked-in era",title:"Class <em>8</em>",books:["Ganita Prakash I & II","Curiosity","Exploring Society I & II"],ch:42,qs:672,wide:true},
   {n:9,href:"class9.html",key:"class9_revision_v1",c:"#d946ef",soft:"#fae8ff",tag:"🆕 new books just dropped",title:"Class <em>9</em>",books:["Ganita Manjari","Exploration","Understanding Society"],ch:30,qs:480,wide:true},
@@ -232,19 +212,23 @@ const dk=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+Strin
 function streakOf(days){if(!days)return 0;let s=0;const d=new Date();if(!days[dk(d)])d.setDate(d.getDate()-1);while(days[dk(d)]){s++;d.setDate(d.getDate()-1)}return s}
 function mastery(S){if(!S||!S.q)return 0;let l=0;for(const k in S.q)if(S.q[k]&&S.q[k].l)l++;return l}
 
-// date + greeting
+// Name Prompt
+let studentName = localStorage.getItem("study_studio_name");
+if(!studentName){
+  studentName = prompt("Welcome to Study Studio! What's your name?", "Aman");
+  if(studentName) localStorage.setItem("study_studio_name", studentName);
+}
+studentName = studentName || "Student";
+
 const now=new Date();
 $("#today").textContent=now.toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short"});
 
-// marquee
 const row=VIBES.map(v=>`<span>${v} <i>✦</i></span>`).join("");
 $("#track").innerHTML=row+row;
 
-// daily vibe (same all day)
 const day=Math.floor(now/864e5);const q=QUOTES[day%QUOTES.length];
 $("#quote").textContent=q[0];$("#task").textContent="Today’s tiny task: "+q[1];
 
-// cards + stats from saved progress
 let xp=0,best=0,qsTot=0,chTot=0,last=null;
 $("#grid").innerHTML=CLASSES.map((c,i)=>{
   const S=read(c.key);const st=S?streakOf(S.days):0;const m=mastery(S);const p=Math.min(100,Math.round(m*100/c.qs));
@@ -264,15 +248,15 @@ $("#stQs").textContent=qsTot.toLocaleString("en-IN");
 $("#stCh").textContent=chTot;
 requestAnimationFrame(()=>document.querySelectorAll(".prog i").forEach(i=>i.style.width=Math.max(3,+i.dataset.w)+"%"));
 
-// returning student: personalise hero + CTA
+// Update Greeting
+const h=now.getHours(),g=h<12?"good morning":h<17?"hey hey":"evening grind";
+$("#greet").innerHTML=`${g}, ${esc(studentName.toLowerCase())} — it’s`;
+
 if(last){
-  const h=now.getHours(),g=h<12?"good morning":h<17?"hey hey":"evening grind";
-  $("#greet").innerHTML=`${g}, ${esc(studentName.toLowerCase())} — it’s`;
-    const cta=$("#cta");cta.textContent=`Continue Class 6 →`;cta.href='class6.html';
+  const cta=$("#cta");cta.textContent=`Continue Class ${last.n} →`;cta.href=last.href;
   const card=document.querySelector(`[data-key="${last.key}"]`);if(card)card.insertAdjacentHTML("beforeend",`<span class="mine">your class</span>`);
 }
 
-// subtle tilt on pointer devices
 if(matchMedia("(hover:hover)").matches)document.querySelectorAll(".card").forEach(el=>{
   el.addEventListener("mousemove",e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`translate(-3px,-5px) perspective(800px) rotateY(${x*6}deg) rotateX(${-y*6}deg)`});
   el.addEventListener("mouseleave",()=>el.style.transform="");
