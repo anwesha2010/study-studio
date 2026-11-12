@@ -204,7 +204,7 @@ canvas#fx{position:fixed;inset:0;pointer-events:none;z-index:60}
 <canvas id="fx"></canvas>
 <script>
 const DATA = {"subjects":[{"name":"Mathematics","book":"Math-Magic","icon":"➗","color":"#4f46e5","id":"math","chapters":[{"n":1,"t":"Sample Chapter (to be filled)","intro":"This is a placeholder. Inject real chapters from the reference file.","prio":[{"t":"Placeholder priority","s":3}],"traps":[{"m":"Placeholder trap","c":"Placeholder correction","t":"Tip"}],"rq":[{"q":"Placeholder why question?","a":"Placeholder answer."}],"mock":[],"qs":[{"id":"c5p0","k":"mcq","q":"Sample: 2 + 2 = ?","o":["3","4","5","6"],"a":1,"e":"Basic check.","imp":false}],"top":[],"prac":[],"comp":[],"case":[],"conc":[],"notes":[{"h":"Placeholder note","t":"Replace this DATA object with real Class 5 content."}]}]},{"name":"Science","book":"Looking Around","icon":"🔬","color":"#059669","id":"sci","chapters":[{"n":1,"t":"Sample Chapter","prio":[{"t":"Placeholder","s":3}],"traps":[],"rq":[],"mock":[],"qs":[{"id":"c5s0","k":"mcq","q":"Sample science Q?","o":["A","B","C","D"],"a":0,"e":"","imp":false}],"top":[],"prac":[],"comp":[],"case":[],"conc":[],"notes":[{"h":"Placeholder","t":"Inject real Class 5 Science here."}]}]},{"name":"Social Science","book":"Our World","icon":"🌏","color":"#d97706","id":"sst","chapters":[{"n":1,"t":"Sample Chapter","prio":[{"t":"Placeholder","s":3}],"traps":[],"rq":[],"mock":[],"qs":[{"id":"c5ss0","k":"mcq","q":"Sample SST Q?","o":["A","B","C","D"],"a":0,"e":"","imp":false}],"top":[],"prac":[],"comp":[],"case":[],"conc":[],"notes":[{"h":"Placeholder","t":"Inject real Class 5 SST here."}]}]}]};
-let NAME = "Champ";
+let NAME = localStorage.getItem("studio_student_name") || "Champ";
 
 /* ---------- daily thoughts ---------- */
 const MORALS = [
