@@ -367,7 +367,36 @@ function updateUI() {
     chTot+=c.ch;
   });
   $("#stXp").textContent=xp.toLocaleString("en-IN");
-  $("#stStreak").textContent=best;
+    // CALCULATE MASTER COMBO STREAK
+  let masterDays = {};
+  CLASSES.forEach(c => {
+    const S = read(c.key);
+    if (S && S.days) {
+      // Merge all class activity into one master calendar
+      for (let date in S.days) {
+        masterDays[date] = true;
+      }
+    }
+  });
+
+  // Count the streak
+  let currentMasterStreak = 0;
+  let d = new Date();
+  const dk = (date) => date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
+  
+  // If they haven't studied today, check yesterday
+  if (!masterDays[dk(d)]) {
+    d.setDate(d.getDate() - 1);
+  }
+  
+  // Count backwards
+  while (masterDays[dk(d)]) {
+    currentMasterStreak++;
+    d.setDate(d.getDate() - 1);
+  }
+
+  // Show the highest of the master streak OR the individual best streak
+  $("#stStreak").textContent = Math.max(best, currentMasterStreak);
   $("#stQs").textContent=qsTot.toLocaleString("en-IN");
   $("#stCh").textContent=chTot;
 
