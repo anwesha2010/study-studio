@@ -195,7 +195,10 @@ input:focus, select:focus{box-shadow:4px 4px 0 #a78bfa;background:#fff}
       </ol>
     </div>
   </div>
-
+<!-- Floating Mistake Button -->
+<div id="mistakeFab" onclick="launchMistakeQuiz()" style="display:none; position:fixed; bottom:30px; right:30px; background:#e0384b; color:#fff; border:2px solid var(--ink); padding:15px 25px; border-radius:99px; font-weight:800; font-size:16px; box-shadow:4px 4px 0 var(--ink); cursor:pointer; z-index:99; animation:bob 3s infinite;">
+  🚨 <span id="mistakeCount">0</span> Mistakes to Fix
+</div>
   <footer>made with ♡ for exam season · <b>study studio</b> · works offline once opened</footer>
 </div>
 
@@ -410,7 +413,49 @@ $("#track").innerHTML=row+row;
 const now=new Date();
 const day=Math.floor(now/864e5);const q=QUOTES[day%QUOTES.length];
 $("#quote").textContent=q[0];$("#task").textContent="Today’s tiny task: "+q[1];
+// --- SMART MISTAKE NOTEBOOK LOGIC ---
+let mistakeQuestions = [];
 
+function scanForMistakes() {
+  mistakeQuestions = [];
+  // We need to look inside the actual data to find the questions
+  // Since the front page doesn't have the DATA, we check localStorage
+  CLASSES.forEach(c => {
+    const S = read(c.key);
+    if (S && S.q) {
+      for (let qid in S.q) {
+        // If the student got it wrong (l:0)
+        if (S.q[qid].l === 0) {
+          mistakeQuestions.push({ classId: c.n, qid: qid });
+        }
+      }
+    }
+  });
+
+  const fab = document.getElementById("mistakeFab");
+  const countEl = document.getElementById("mistakeCount");
+
+  if (mistakeQuestions.length > 0) {
+    fab.style.display = "flex";
+    countEl.textContent = mistakeQuestions.length;
+  } else {
+    fab.style.display = "none";
+  }
+}
+
+function launchMistakeQuiz() {
+  if (mistakeQuestions.length === 0) return;
+  
+  // Find the first class that has mistakes
+  const first = mistakeQuestions[0];
+  
+  // Redirect them into the class app and trigger the Mistake mode
+  // We use a URL parameter ?fix=1 to tell the class app to open the Mistake Notebook
+  window.location.href = "class" + first.classId + ".html?fix=1";
+}
+
+// Add this to the bottom of the updateUI function so it runs on load
+scanForMistakes();
 updateUI();
 </script>
 </body>
